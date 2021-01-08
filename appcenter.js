@@ -7,6 +7,15 @@ function delay(time) {
     });
 }
 
+async function navigateToLatestTest(page) {
+    await page.goto('https://appcenter.ms/users/ld16testsui-outlook.fr/apps/LD16-iOS/test/runs')
+    await delay(4000) // Mieux avec un await page.waitForSelector('div...')
+
+    // Ici: Récupérer le dernier test de la liste au lieu d'utiliser un url en dur
+    await page.goto('https://appcenter.ms/users/ld16testsui-outlook.fr/apps/LD16-iOS/test/runs/354a6083-3c1f-46c2-bcf4-396b3df1802e')
+    await delay(4000) // Mieux avec un await page.waitForSelector('div...')
+}
+
 async function logInWithGoogle(page) {
     const navigationPromise = page.waitForNavigation()
 
@@ -38,6 +47,8 @@ async function logInWithGoogle(page) {
     await page.goto('https://appcenter.ms/sign-in')
 
     await logInWithGoogle(page)
+
+    await navigateToLatestTest(page)
 
     // await browser.close()
 })();
