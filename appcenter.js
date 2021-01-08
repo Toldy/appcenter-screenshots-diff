@@ -7,19 +7,12 @@ function delay(time) {
     });
 }
 
-
 (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+    const browser = await puppeteer.launch({ headless: false })
+    const page = await browser.newPage()
 
-    await page.emulate(iPhone);
+    await page.setViewport({ width: 1280, height: 800 })
+    await page.goto('https://appcenter.ms/sign-in')
 
-    await page.goto('https://example.com');
-
-    await page.screenshot({
-        path: 'full.png',
-        fullPage: true
-    })
-
-    await browser.close();
+    // await browser.close()
 })();
