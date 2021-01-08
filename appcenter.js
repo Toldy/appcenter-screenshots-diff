@@ -1,10 +1,33 @@
 const puppeteer = require('puppeteer');
-const iPhone = puppeteer.devices['iPhone 6'];
+const fetch = require('node-fetch');
+const fs = require('fs');
 
 function delay(time) {
     return new Promise(function (resolve) {
         setTimeout(resolve, time)
-    });
+    })
+}
+
+function saveImageToDisk(url, filename) {
+    fetch(url)
+        .then(res => {
+            const dest = fs.createWriteStream(filename);
+            res.body.pipe(dest)
+            console.log(`${filename} saved (from url: ${url})`)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+function saveImages(images) {
+    images.forEach(src => {
+        let srcArray = src.split('/')
+        let pos = srcArray.length - 1
+        let filename = srcArray[pos]
+
+        saveImageToDisk(src, `./images/${filename}.jpeg`)
+    })
 }
 
 async function navigateToLatestTest(page) {
@@ -21,7 +44,6 @@ async function logInWithGoogle(page) {
 
     await page.waitForSelector('a[icon="google"]')
     await page.click('a[icon="google"]')
-    await page.screenshot({ path: 'after.png' })
 
     await navigationPromise
     await page.waitForSelector('input[type="email"]')
@@ -61,11 +83,12 @@ async function fetchImagesOfTest(testUrl, page) {
 
     await logInWithGoogle(page)
 
-    await navigateToLatestTest(page)
+    // await navigateToLatestTest(page)
 
     // Ici: Itérer sur chacun des tests
     const images = await fetchImagesOfTest('https://appcenter.ms/users/ld16testsui-outlook.fr/apps/LD16-iOS/test/runs/354a6083-3c1f-46c2-bcf4-396b3df1802e/0-0-0', page)
-    console.log(images)
 
-    // await browser.close()
+    saveImages(images)
+
+    await browser.close()
 })();
