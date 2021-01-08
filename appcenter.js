@@ -9,9 +9,8 @@ function delay(time) {
 (async () => {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
-    await page.goto('https://example.com');
-
-    await delay(2000);
+    await page.setViewport({ width: 10000, height: 10000 })
+    await page.goto('https://example.com', {waitUntil: 'networkidle2'});
 
     await page.screenshot({ path: 'example.png' });
 
