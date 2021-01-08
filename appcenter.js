@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const iPhone = puppeteer.devices['iPhone 6'];
 
 function delay(time) {
     return new Promise(function (resolve) {
@@ -6,13 +7,19 @@ function delay(time) {
     });
 }
 
-(async () => {
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-    await page.setViewport({ width: 10000, height: 10000 })
-    await page.goto('https://example.com', {waitUntil: 'networkidle2'});
 
-    await page.screenshot({ path: 'example.png' });
+(async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    await page.emulate(iPhone);
+
+    await page.goto('https://example.com');
+
+    await page.screenshot({
+        path: 'full.png',
+        fullPage: true
+    })
 
     await browser.close();
 })();
