@@ -39,6 +39,19 @@ async function logInWithGoogle(page) {
     await delay(4000)
 }
 
+async function fetchImagesOfTest(testUrl, page) {
+    await page.goto('https://appcenter.ms/users/ld16testsui-outlook.fr/apps/LD16-iOS/test/runs/354a6083-3c1f-46c2-bcf4-396b3df1802e/0-0-0')
+    await delay(4000) // Mieux avec un await page.waitForSelector('div...')
+
+    return await page.evaluate((sel) => {
+        let elements = Array.from(document.querySelectorAll(sel))
+        let links = elements.map(element => {
+            return element.src
+        })
+        return links
+    }, ".large-screenshot")
+}
+
 (async () => {
     const browser = await puppeteer.launch({ headless: false })
     const page = await browser.newPage()
@@ -49,6 +62,10 @@ async function logInWithGoogle(page) {
     await logInWithGoogle(page)
 
     await navigateToLatestTest(page)
+
+    // Ici: Itérer sur chacun des tests
+    const images = await fetchImagesOfTest('https://appcenter.ms/users/ld16testsui-outlook.fr/apps/LD16-iOS/test/runs/354a6083-3c1f-46c2-bcf4-396b3df1802e/0-0-0', page)
+    console.log(images)
 
     // await browser.close()
 })();
