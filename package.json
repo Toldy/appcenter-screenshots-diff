@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "puppeteer": "^5.5.0",
+    "puppeteer-core": "^5.5.0"
+  },
+  "name": "tech-friday-puppeteer",
+  "version": "1.0.0",
+  "main": "appcenter.js",
+  "scripts": {
+    "start": "node appcenter.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
